@@ -1,0 +1,53 @@
+  {
+    "name": "Medium Auto Follow Bot",
+    "version": "1.2",
+    "description": "A Bot to Follow and Unfollow Medium Users",
+    "manifest_version": 2,
+    "background": {
+      "scripts": ["js/background.js"],
+      "persistent": false
+    },
+    "content_scripts": [
+    {
+    	"matches": ["https://medium.com/*/following"],
+      "js": [
+        "third-party/jquery.min.js",
+        "js/utils/constants.js",
+        "js/utils/content_script_analytics.js",
+        "js/utils/prototypeOverrides.js",
+        "js/utils/slowIterate.js",
+        "js/utils/storage.js",
+        "js/following.js"
+      ]
+		},   	
+		{
+    	"matches": ["https://medium.com/*/followers"],
+      "js": [
+        "third-party/jquery.min.js",
+        "js/utils/constants.js",
+        "js/utils/content_script_analytics.js",
+        "js/utils/prototypeOverrides.js",
+        "js/utils/slowIterate.js",
+        "js/utils/storage.js",
+        "js/followers.js"
+      ]
+		}
+  	],
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
+    "permissions": ["storage", "identity", "unlimitedStorage"],
+    "browser_action": {
+      "default_popup": "html/popup.html",
+      "default_icon": {
+        "16": "images/ChromeToolsIcon.png",
+        "32": "images/ChromeToolsIcon.png",
+        "48": "images/ChromeToolsIcon.png",
+        "128": "images/ChromeToolsIcon.png"
+      }
+    },
+    "icons": {
+      "16": "images/ChromeToolsIcon.png",
+      "32": "images/ChromeToolsIcon.png",
+      "48": "images/ChromeToolsIcon.png",
+      "128": "images/ChromeToolsIcon.png"
+    }
+  }
