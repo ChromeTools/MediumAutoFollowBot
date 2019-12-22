@@ -64,7 +64,6 @@ followAllButton.innerText="Follow All";
 followAllButton.className = "button button--chromeless u-baseColor--buttonNormal"
 
 followAllButton.onclick = async () => {
-	setLocalObj(PREVIOUSLY_FOLLOWED_LIST, previouslyFollowedList)
 	console.log(`follow all button clicked, scrolling to bottom of the page with ${numberOfScrolls} scrolls...`)
 	for (var i = 0; i < numberOfScrolls; i++) {
 		await sleep(SLEEP_TIME_IN_MS - 2000);
