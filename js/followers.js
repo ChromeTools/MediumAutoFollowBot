@@ -29,7 +29,7 @@ const followAction = async (user, previouslyFollowedList) => {
 		console.log(`attempting to follow user ${userAlias}...`)
 		clickFollowButton(dataUserId)
 		await sleep(SLEEP_TIME_IN_MS)
-		if ($(BUTTER_BAR_MESSAGE_SELECTOR)[0].innerText != 'You’ve reached your daily follow limit.') {
+		if ($(BUTTER_BAR_MESSAGE_SELECTOR)[0].innerText != FOLLOW_LIMIT_BUTTER_BAR_ERROR_MESSAGE) {
 			console.log(`followed user ${userAlias}`)
 			console.log(`adding user ${userAlias} to previously followed list.`)
 			//add this user to the previously followed user list so we don't follow them twice.

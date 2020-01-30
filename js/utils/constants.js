@@ -8,6 +8,7 @@ const BUTTER_BAR_MESSAGE_SELECTOR = '.butterBar-message'
 const BUTTER_BAR_MESSAGE_CLASSNAME = 'butterBar-message'
 const BUTTER_BAR_ERROR_SELECTOR = '.butterBar--error'
 const BUTTER_BAR_ACTIVATE_STRING = ' is-active'
+const FOLLOW_LIMIT_BUTTER_BAR_ERROR_MESSAGE = 'You’ve reached your daily follow limit.'
 const BIO_TEXT_SELECTOR = 'a.' + BIO_TEXT_CLASS.replace(/\s/g, '.');
 const SLEEP_TIME_IN_MS = 4000 //4 seconds for now until we get customer feedback.
 const USER_NAME_HREF_INDEX = 3
