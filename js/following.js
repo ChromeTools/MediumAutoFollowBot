@@ -33,6 +33,7 @@ unfollowAllButton.className = "button button--chromeless u-baseColor--buttonNorm
 
 unfollowAllButton.onclick = async () => {
 	console.log(`unfollow button clicked, scrolling to bottom of the page...`)
+	appendButterBarMessage(`Scrolling to the bottom of the page with ${numberOfScrolls} scrolls to get the full list of users to unfollow...`)
 	console.log(numberOfScrolls)
 	for (var i = 0; i < numberOfScrolls; i++) {
 		await sleep(SLEEP_TIME_IN_MS - 2000);
@@ -41,6 +42,8 @@ unfollowAllButton.onclick = async () => {
 	console.log(`finished scrolling`)
 	const users = $(USER_PROFILE_SELECTOR)
 	console.log(`unfollowing ${users.length} users`)
+	clearButterBarMessages()
+	appendButterBarMessage(`Unfollowing ${users.length} users starting from the top of the page.  Scroll to the top of the page to view the progress of the unfollowing.`)
 	whitelist = await getLocalObj(UNFOLLOW_WHITELIST) || []
     await slowIterate(() => { iterateUsers(users, unfollowAction, whitelist) })
 }

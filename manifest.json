@@ -1,6 +1,6 @@
   {
     "name": "Medium Auto Follow Bot",
-    "version": "1.2",
+    "version": "1.4",
     "description": "A Bot to Follow and Unfollow Medium Users",
     "manifest_version": 2,
     "background": {
@@ -13,6 +13,7 @@
       "js": [
         "third-party/jquery.min.js",
         "js/utils/constants.js",
+        "js/utils/messaging.js",
         "js/utils/content_script_analytics.js",
         "js/utils/prototypeOverrides.js",
         "js/utils/slowIterate.js",
@@ -25,6 +26,7 @@
       "js": [
         "third-party/jquery.min.js",
         "js/utils/constants.js",
+        "js/utils/messaging.js",
         "js/utils/content_script_analytics.js",
         "js/utils/prototypeOverrides.js",
         "js/utils/slowIterate.js",

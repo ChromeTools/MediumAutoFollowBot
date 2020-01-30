@@ -29,7 +29,7 @@ const followAction = async (user, previouslyFollowedList) => {
 		console.log(`attempting to follow user ${userAlias}...`)
 		clickFollowButton(dataUserId)
 		await sleep(SLEEP_TIME_IN_MS)
-		if ($(FOLLOW_LIMIT_ERROR_SELECTOR).length == 0) {
+		if ($(BUTTER_BAR_MESSAGE_SELECTOR)[0].innerText != 'You’ve reached your daily follow limit.') {
 			console.log(`followed user ${userAlias}`)
 			console.log(`adding user ${userAlias} to previously followed list.`)
 			//add this user to the previously followed user list so we don't follow them twice.
@@ -64,6 +64,7 @@ followAllButton.innerText="Follow All";
 followAllButton.className = "button button--chromeless u-baseColor--buttonNormal"
 
 followAllButton.onclick = async () => {
+	appendButterBarMessage(`Scrolling to the bottom of the page with ${numberOfScrolls} scrolls to get the full list of users to follow...`)
 	console.log(`follow all button clicked, scrolling to bottom of the page with ${numberOfScrolls} scrolls...`)
 	for (var i = 0; i < numberOfScrolls; i++) {
 		await sleep(SLEEP_TIME_IN_MS - 2000);
@@ -73,6 +74,8 @@ followAllButton.onclick = async () => {
 	console.log(`finished scrolling`)
 	const users = $(USER_PROFILE_SELECTOR)
 	console.log(`following ${users.length} users`)
+	clearButterBarMessages()
+	appendButterBarMessage(`Following ${users.length} users starting from the top of the page.  Scroll to the top of the page to view the progress of the following.`)
 	// get sync storage for all user's we've previously followed.
 	var previouslyFollowedList = await getLocalObj(PREVIOUSLY_FOLLOWED_LIST) || []
 	console.log(`previously followed ${previouslyFollowedList.length} users`)
