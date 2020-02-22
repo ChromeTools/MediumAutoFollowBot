@@ -1,6 +1,6 @@
   {
     "name": "Medium Auto Follow Bot",
-    "version": "1.4",
+    "version": "1.5",
     "description": "A Bot to Follow and Unfollow Medium Users",
     "manifest_version": 2,
     "background": {
@@ -36,7 +36,7 @@
 		}
   	],
     "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
-    "permissions": ["storage", "identity", "unlimitedStorage"],
+    "permissions": ["storage", "identity", "identity.email", "unlimitedStorage"],
     "browser_action": {
       "default_popup": "html/popup.html",
       "default_icon": {

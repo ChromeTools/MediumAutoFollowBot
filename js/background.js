@@ -9,5 +9,12 @@
 //to access these from an extension, message passing is used between this file and the extension javascript.
 
 //See this documentation for more information on message passing: https://developer.chrome.com/extensions/messaging
-//For the medium bot, none of the APIs are currently in use, but this file is left in the repo to show that it is
-// possible to access the APIs and some comments about how to do it.
+//Currently we've add the functionality to retrieve the user's email if they have sync turned on in Chrome, but we're
+//console logging it for now.
+
+chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
+	chrome.identity.getProfileUserInfo((info) => {
+		sendResponse({email: info.email})
+	});
+    return true //this forces the call to be syncronous
+});

@@ -3,7 +3,7 @@ let submit = document.getElementById('whitelistSubmit')
 let contact = document.getElementById('contact')
 
 document.body.onload = async () => {
-  whitelist = await getLocalObj(UNFOLLOW_WHITELIST)
+  whitelist = await getLocalObj(UNFOLLOW_WHITELIST) || []
   document.getElementById('whitelist').innerText = whitelist
 }
 
