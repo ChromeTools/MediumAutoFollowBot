@@ -8,11 +8,6 @@ const removeUsers = async (usernames) => {
 	})
 }
 
-chrome.runtime.sendMessage({}, function(response) {
-	console.log('user\'s email is...')
-	console.log(response.email)
-});
-
 runFunctionInPageContext(function () {
   ga('create', 'UA-154200398-1', 'auto', {'name': 'followersTracker'});
   ga('followersTracker.send', 'pageview');
