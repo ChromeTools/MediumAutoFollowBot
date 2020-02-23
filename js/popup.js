@@ -29,3 +29,9 @@ submit.onclick = async () => {
     await setLocalObj(UNFOLLOW_WHITELIST, whitelist)
   }
 }
+
+contact.onclick = async () => {
+  chrome.tabs.update({
+        url: "mailto:mediumtooldev@gmail.com"
+    });
+}
