@@ -1,7 +1,7 @@
 const USER_PROFILE_SELECTOR = 'a.link.u-baseColor--link.avatar.u-width60.u-marginRight20.u-flex0'
 const FOLLOW_BUTTON_SELECTOR = 'button[data-action-value="{0}"]'
 const FOLLOW_BUTTONS_COUNT_SELECTOR = "span:contains('Follow')"
-const FOLLOWER_COUNT_SELECTOR = "a.button.button--chromeless.u-baseColor--buttonNormal:contains(' Followers')"
+const FOLLOWER_COUNT_SELECTOR = "a.button.button--chromeless.u-baseColor--buttonNormal:contains(' Follower')"
 const FOLLOWING_COUNT_SELECTOR = "a.button.button--chromeless.u-baseColor--buttonNormal:contains(' Following')"
 const BIO_TEXT_CLASS = 'link link--darken u-accentColor--textDarken u-baseColor--link u-textColorNormal u-block u-fontSize14'
 const BUTTER_BAR_MESSAGE_SELECTOR = '.butterBar-message'
