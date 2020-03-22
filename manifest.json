@@ -1,6 +1,6 @@
   {
     "name": "Medium Auto Follow Bot",
-    "version": "1.5",
+    "version": "1.6",
     "description": "A Bot to Follow and Unfollow Medium Users",
     "manifest_version": 2,
     "background": {
