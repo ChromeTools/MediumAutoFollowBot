@@ -83,5 +83,11 @@ followAllButton.onclick = async () => {
 }
 
 var followerCountButton = $(FOLLOWER_COUNT_SELECTOR)
+var followingCountButton = $(FOLLOWING_COUNT_SELECTOR)
 numberOfScrolls = Math.ceil((followerCountButton[0].getAttribute('title').split(/\s+/)[1].replace(/,/g, '') - 18) / 16)
 followerCountButton[0].after(followAllButton)
+//we had to add this hack to ensure the page is reloaded when the following count button is clicked, 
+// otherwise the following.js script doesn't get matched against the URL since chrome doesn't know that a URL change has actually occurred.
+followingCountButton.click(() => {
+	location.href = 'following';
+});

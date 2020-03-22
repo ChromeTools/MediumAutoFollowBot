@@ -52,3 +52,11 @@ var followingCountButton = $(FOLLOWING_COUNT_SELECTOR)
 numberOfScrolls = Math.ceil((followingCountButton[0].getAttribute('title').split(/\s+/)[1].replace(/,/g, '') - 18) / 16)
 var followerCountButton = $(FOLLOWER_COUNT_SELECTOR)
 followerCountButton[0].after(unfollowAllButton)
+
+//we had to add this hack to ensure the page is reloaded when the follower count button is clicked, 
+// otherwise the followers.js script doesn't get matched against the URL since chrome doesn't know that a URL change has occurred.
+// This is because Medium doesn't actually request the new page when the button is clicked.
+followerCountButton.click(() => {
+	location.href = 'followers';
+});
+
