@@ -1,10 +1,45 @@
   <!DOCTYPE html>
   <html>
     <head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <style>
         button {
           height: 50px;
           width: 322px;
+        }
+
+        /* Style all font awesome icons */
+        .fa {
+          padding: 20px;
+          font-size: 30px;
+          width: 50px;
+          text-align: center;
+          text-decoration: none;
+        }
+
+        /* Add a hover effect if you want */
+        .fa:hover {
+          opacity: 0.7;
+        }
+
+        /* Set a specific color for each brand */
+
+        /* Facebook */
+        .fa-facebook {
+          background: #3B5998;
+          color: white;
+        }
+
+        /* Twitter */
+        .fa-twitter {
+          background: #55ACEE;
+          color: white;
+        }
+
+        /* Email */
+        .fa-envelope {
+          background: #9932CC;
+          color: white;
         }
       </style>
     </head>
@@ -13,7 +48,9 @@
       <p id="errorMessage"> </p>
       <textarea type="text" id="whitelist" cols="50" rows="5"></textarea>
       <button id="whitelistSubmit"> Submit Whitelist </button>
-      <button id="contact"> Contact Us </button>
+      <a class="fa fa-facebook"></a>
+      <a class="fa fa-twitter"></a>
+      <a class="fa fa-envelope"></a>
       <script src="../js/utils/constants.js"></script>
       <script src="../js/utils/html_analytics.js"></script>
       <script src="../js/utils/storage.js"></script>

@@ -1,13 +1,15 @@
 ga('send', 'pageview', '/popup.html');
-let submit = document.getElementById('whitelistSubmit')
-let contact = document.getElementById('contact')
+const submitButton = document.getElementById('whitelistSubmit')
+const facebookButton = document.getElementsByClassName('fa-facebook')[0]
+const twitterButton = document.getElementsByClassName('fa-twitter')[0]
+const emailButton = document.getElementsByClassName('fa-envelope')[0]
 
 document.body.onload = async () => {
   whitelist = await getLocalObj(UNFOLLOW_WHITELIST) || []
   document.getElementById('whitelist').innerText = whitelist
 }
 
-submit.onclick = async () => {
+submitButton.onclick = async () => {
   let whitelist = document.getElementById('whitelist')
   //split the whitelist by comma and remove unnecessary whitespace
   whitelist = whitelist.value.split(',').map(username => username.trim())
@@ -30,8 +32,20 @@ submit.onclick = async () => {
   }
 }
 
-contact.onclick = async () => {
+emailButton.onclick = async () => {
   chrome.tabs.update({
         url: "mailto:mediumtooldev@gmail.com"
     });
+}
+
+facebookButton.onclick = async () => {
+  chrome.tabs.update({
+    url: "https://www.facebook.com/medium.tool.3"
+  });
+}
+
+twitterButton.onclick = async () => {
+  chrome.tabs.update({
+    url: "https://twitter.com/ToolsChrome"
+  });
 }
