@@ -22,13 +22,13 @@ submitButton.onclick = async () => {
       'exDescription': `Malformed usernames ${malformedUsernames}`,
       'exFatal': false
     });
-    errorMessage = document.getElementById('errorMessage')
-    errorMessage.style.color = "red"
-    errorMessage.innerText = "All usernames must begin with @."
+    message = document.getElementById('message')
+    message.style.color = "red"
+    message.innerText = "All usernames must begin with @."
   } else {
-    errorMessage = document.getElementById('errorMessage')
-    errorMessage.innerText = ""
     await setLocalObj(UNFOLLOW_WHITELIST, whitelist)
+    message = document.getElementById('message')
+    message.innerText = "whitelist successfully submitted and in use."
   }
 }
 
