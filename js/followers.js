@@ -17,13 +17,20 @@ var numberOfScrolls = DEFAULT_SCROLL_NUMBER //if for some reason the number of s
 const followAction = async (user, previouslyFollowedList) => {
 	const userAlias = $(user).attr('href').split('/')[USER_NAME_HREF_INDEX]
 	const dataUserId = $(user).attr('data-user-id')
+	const onlyFollowMediumMembers = await getLocalObj(MEDIUM_MEMBERS_ONLY) || false
+
+	//for now we're going to hard code this "requirement" in, if there end up being more "requirements" one idea I had
+	//was to pass these requirements in as a list of functions to be iterated through.  If any of them fail then we skip
+	//trying to follow the user.  I don't want to prematurely abstract though if it isn't necessary.
+	if (onlyFollowMediumMembers && !isAMediumMember(user)) {
+		console.log('only following medium members, this is not a medium member.')
+		showInlineMessage(user, `Only following Medium members and ${userAlias} is not a Medium member.`)
+		return
+	}
 	// see if we've previously followed this user or not.
 	if (previouslyFollowedList.includes(userAlias)) {
 		console.log(`not following user ${userAlias} since we've previously followed them.`)
-		const alreadyFollowedParagraph = document.createElement("p"); 
-		alreadyFollowedParagraph.innerText = `You've already followed ${userAlias} once before.`;
-		alreadyFollowedParagraph.className = BIO_TEXT_CLASS
-		$(user).closest('div').find(BIO_TEXT_SELECTOR).after(alreadyFollowedParagraph)
+		showInlineMessage(user, `You've already followed ${userAlias} once before.`)
 	// otherwise we can follow this user.
 	} else {
 		console.log(`attempting to follow user ${userAlias}...`)
@@ -57,6 +64,11 @@ const clickFollowButton = (userDataId) => {
 	}
 	console.log(`clicking follow button ${userDataId}`)
 	followButton.get(1).click()
+}
+
+const isAMediumMember = (user) => {
+	// a medium member has their child element as a div for the green halo, whereas a non-member just has their profile image element (an img element) as the child element
+	return $(user).children().is('div')
 }
 
 const followAllButton = document.createElement("button"); 
