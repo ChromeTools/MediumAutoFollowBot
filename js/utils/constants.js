@@ -15,4 +15,5 @@ const DEFAULT_SCROLL_NUMBER = 5
 const PREVIOUSLY_FOLLOWED_LIST = 'previouslyFollowedList'
 const UNFOLLOW_WHITELIST = 'unfollowWhitelist'
 const MEDIUM_MEMBERS_ONLY = 'mediumMembersOnly'
+const FOLLOW_FROM_BOTTOM = 'followFromBottom'
 const ANALYTICS_PROPERTY_ID = 'UA-154200398-1'

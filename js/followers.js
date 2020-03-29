@@ -76,6 +76,8 @@ followAllButton.innerText="Follow All";
 followAllButton.className = "button button--chromeless u-baseColor--buttonNormal"
 
 followAllButton.onclick = async () => {
+	const followFromBottomOfList = await getLocalObj(FOLLOW_FROM_BOTTOM) || false
+	const bottomTopSwitch = followFromBottomOfList ? 'bottom' : 'top'
 	appendButterBarMessage(`Scrolling to the bottom of the page with ${numberOfScrolls} scrolls to get the full list of users to follow...`)
 	console.log(`follow all button clicked, scrolling to bottom of the page with ${numberOfScrolls} scrolls...`)
 	for (var i = 0; i < numberOfScrolls; i++) {
@@ -84,10 +86,10 @@ followAllButton.onclick = async () => {
 	}
 	await sleep(SLEEP_TIME_IN_MS - 2000);
 	console.log(`finished scrolling`)
-	const users = $(USER_PROFILE_SELECTOR)
+	const users = followFromBottomOfList ? $(USER_PROFILE_SELECTOR).get().reverse() : $(USER_PROFILE_SELECTOR)
 	console.log(`following ${users.length} users`)
 	clearButterBarMessages()
-	appendButterBarMessage(`Following ${users.length} users starting from the top of the page.  Scroll to the top of the page to view the progress of the following.`)
+	appendButterBarMessage(`Following ${users.length} users starting from the ${bottomTopSwitch} of the page.  Scroll to the ${bottomTopSwitch} of the page to view the progress of the following.`)
 	// get sync storage for all user's we've previously followed.
 	var previouslyFollowedList = await getLocalObj(PREVIOUSLY_FOLLOWED_LIST) || []
 	console.log(`previously followed ${previouslyFollowedList.length} users`)
@@ -96,7 +98,7 @@ followAllButton.onclick = async () => {
 
 var followerCountButton = $(FOLLOWER_COUNT_SELECTOR)
 var followingCountButton = $(FOLLOWING_COUNT_SELECTOR)
-numberOfScrolls = Math.ceil((followerCountButton[0].getAttribute('title').split(/\s+/)[1].replace(/,/g, '') - 18) / 16)
+numberOfScrolls = Math.ceil((followerCountButton[0].getAttribute('title').split(/\s+/)[1].replace(/,/g, '') - 18) / 10)
 followerCountButton[0].after(followAllButton)
 //we had to add this hack to ensure the page is reloaded when the following count button is clicked, 
 // otherwise the following.js script doesn't get matched against the URL since chrome doesn't know that a URL change has actually occurred.

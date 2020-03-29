@@ -49,7 +49,7 @@ unfollowAllButton.onclick = async () => {
 }
 
 var followingCountButton = $(FOLLOWING_COUNT_SELECTOR)
-numberOfScrolls = Math.ceil((followingCountButton[0].getAttribute('title').split(/\s+/)[1].replace(/,/g, '') - 18) / 16)
+numberOfScrolls = Math.ceil((followingCountButton[0].getAttribute('title').split(/\s+/)[1].replace(/,/g, '') - 18) / 10)
 var followerCountButton = $(FOLLOWER_COUNT_SELECTOR)
 followerCountButton[0].after(unfollowAllButton)
 
