@@ -17,3 +17,10 @@ const clearButterBarMessages = () => {
 	butterBarErrorSelector[0].className = butterBarErrorSelector[0].className.replace(BUTTER_BAR_ACTIVATE_STRING, '')
 	butterBarMessageSelector.remove()
 }
+
+const showInlineMessage = (user, message) => {
+	const messageParagraph = document.createElement("p")
+	messageParagraph.innerText = message
+	messageParagraph.className = BIO_TEXT_CLASS
+	$(user).closest('div').after(messageParagraph)
+}

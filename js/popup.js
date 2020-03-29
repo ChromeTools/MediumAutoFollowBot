@@ -1,12 +1,15 @@
 ga('send', 'pageview', '/popup.html');
 const submitButton = document.getElementById('whitelistSubmit')
+const mediumMembersCheckBox = document.getElementById('mediumMembersOnly')
 const facebookButton = document.getElementsByClassName('fa-facebook')[0]
 const twitterButton = document.getElementsByClassName('fa-twitter')[0]
 const emailButton = document.getElementsByClassName('fa-envelope')[0]
 
 document.body.onload = async () => {
   whitelist = await getLocalObj(UNFOLLOW_WHITELIST) || []
+  mediumMembersOnly = await getLocalObj(MEDIUM_MEMBERS_ONLY) || false
   document.getElementById('whitelist').innerText = whitelist
+  document.getElementById('mediumMembersOnly').checked = mediumMembersOnly
 }
 
 submitButton.onclick = async () => {
@@ -32,20 +35,26 @@ submitButton.onclick = async () => {
   }
 }
 
-emailButton.onclick = async () => {
+emailButton.onclick = () => {
   chrome.tabs.update({
         url: "mailto:mediumtooldev@gmail.com"
     });
 }
 
-facebookButton.onclick = async () => {
+facebookButton.onclick = () => {
   chrome.tabs.update({
     url: "https://www.facebook.com/medium.tool.3"
   });
 }
 
-twitterButton.onclick = async () => {
+twitterButton.onclick = () => {
   chrome.tabs.update({
     url: "https://twitter.com/ToolsChrome"
   });
+}
+
+mediumMembersCheckBox.onclick = async () => {
+  const currentBoxValue = mediumMembersCheckBox.checked
+  await setLocalObj(MEDIUM_MEMBERS_ONLY, currentBoxValue)
+  mediumMembersCheckBox.checked = currentBoxValue ? true : false
 }
