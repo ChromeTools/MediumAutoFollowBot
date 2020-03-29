@@ -46,7 +46,7 @@ emailButton.onclick = () => {
 
 facebookButton.onclick = () => {
   chrome.tabs.update({
-    url: "https://www.facebook.com/medium.tool.3"
+    url: "https://www.facebook.com/chrome.tools.3"
   });
 }
 
