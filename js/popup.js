@@ -2,6 +2,7 @@ ga('send', 'pageview', '/popup.html');
 const submitButton = document.getElementById('whitelistSubmit')
 const mediumMembersCheckBox = document.getElementById('mediumMembersOnly')
 const followFromBottomCheckBox = document.getElementById('followFromBottom')
+const unFollowFromBottomCheckBox = document.getElementById('unFollowFromBottom')
 const facebookButton = document.getElementsByClassName('fa-facebook')[0]
 const twitterButton = document.getElementsByClassName('fa-twitter')[0]
 const emailButton = document.getElementsByClassName('fa-envelope')[0]
@@ -10,9 +11,11 @@ document.body.onload = async () => {
   whitelist = await getLocalObj(UNFOLLOW_WHITELIST) || []
   mediumMembersOnly = await getLocalObj(MEDIUM_MEMBERS_ONLY) || false
   followFromBottom = await getLocalObj(FOLLOW_FROM_BOTTOM) || false
+  unfollowFromBottom = await getLocalObj(UNFOLLOW_FROM_BOTTOM) || false
   document.getElementById('whitelist').innerText = whitelist
   document.getElementById('mediumMembersOnly').checked = mediumMembersOnly
   document.getElementById('followFromBottom').checked = followFromBottom
+  document.getElementById('unFollowFromBottom').checked = unfollowFromBottom
 }
 
 submitButton.onclick = async () => {
@@ -69,3 +72,9 @@ followFromBottomCheckBox.onclick = async () => {
   followFromBottomCheckBox.checked = currentBoxValue ? true : false
 }
 
+
+unFollowFromBottomCheckBox.onclick = async () => {
+  const currentBoxValue = unFollowFromBottomCheckBox.checked
+  await setLocalObj(UNFOLLOW_FROM_BOTTOM, currentBoxValue)
+  unFollowFromBottomCheckBox.checked = currentBoxValue ? true : false
+}
