@@ -7,9 +7,9 @@ async function slowIterate(func) {
 	})
 }
 
-const iterateUsers = async (users, func, filterList) => {
+const iterateUsers = async (users, func, config) => {
 	for (user of users) {
 		await sleep(SLEEP_TIME_IN_MS);
-		func(user, filterList)
+		func(user, config)
 	}
 }

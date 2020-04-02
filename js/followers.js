@@ -14,21 +14,20 @@ runFunctionInPageContext(function () {
 });
 var numberOfScrolls = DEFAULT_SCROLL_NUMBER //if for some reason the number of scrolls isn't calculated properly.
 
-const followAction = async (user, previouslyFollowedList) => {
+const followAction = async (user, config) => {
 	const userAlias = $(user).attr('href').split('/')[USER_NAME_HREF_INDEX]
 	const dataUserId = $(user).attr('data-user-id')
-	const onlyFollowMediumMembers = await getLocalObj(MEDIUM_MEMBERS_ONLY) || false
 
 	//for now we're going to hard code this "requirement" in, if there end up being more "requirements" one idea I had
 	//was to pass these requirements in as a list of functions to be iterated through.  If any of them fail then we skip
 	//trying to follow the user.  I don't want to prematurely abstract though if it isn't necessary.
-	if (onlyFollowMediumMembers && !isAMediumMember(user)) {
+	if (config.onlyFollowMediumMembers && !isAMediumMember(user)) {
 		console.log('only following medium members, this is not a medium member.')
 		showInlineMessage(user, `Only following Medium members and ${userAlias} is not a Medium member.`)
 		return
 	}
 	// see if we've previously followed this user or not.
-	if (previouslyFollowedList.includes(userAlias)) {
+	if (config.previouslyFollowedList.includes(userAlias)) {
 		console.log(`not following user ${userAlias} since we've previously followed them.`)
 		showInlineMessage(user, `You've already followed ${userAlias} once before.`)
 	// otherwise we can follow this user.
@@ -40,8 +39,10 @@ const followAction = async (user, previouslyFollowedList) => {
 			console.log(`followed user ${userAlias}`)
 			console.log(`adding user ${userAlias} to previously followed list.`)
 			//add this user to the previously followed user list so we don't follow them twice.
-			previouslyFollowedList.push(userAlias)
-			await setLocalObj(PREVIOUSLY_FOLLOWED_LIST, previouslyFollowedList)
+			config.previouslyFollowedList.push(userAlias)
+			//mark the date we followed this user in case the lookback unfollow feature is enabled.
+			await setLocalObj(userAlias, (new Date()).toJSON())
+			await setLocalObj(PREVIOUSLY_FOLLOWED_LIST, config.previouslyFollowedList)
 		} else {
 			runFunctionInPageContext(function () {
 				ga('create', 'UA-154200398-1', 'auto', {'name': 'followersTracker'});
@@ -77,6 +78,7 @@ followAllButton.className = "button button--chromeless u-baseColor--buttonNormal
 
 followAllButton.onclick = async () => {
 	const followFromBottomOfList = await getLocalObj(FOLLOW_FROM_BOTTOM) || false
+	const onlyFollowMediumMembers = await getLocalObj(MEDIUM_MEMBERS_ONLY) || false
 	const bottomTopSwitch = followFromBottomOfList ? 'bottom' : 'top'
 	appendButterBarMessage(`Scrolling to the bottom of the page with ${numberOfScrolls} scrolls to get the full list of users to follow...`)
 	console.log(`follow all button clicked, scrolling to bottom of the page with ${numberOfScrolls} scrolls...`)
@@ -93,7 +95,12 @@ followAllButton.onclick = async () => {
 	// get sync storage for all user's we've previously followed.
 	var previouslyFollowedList = await getLocalObj(PREVIOUSLY_FOLLOWED_LIST) || []
 	console.log(`previously followed ${previouslyFollowedList.length} users`)
-	await slowIterate(() => { iterateUsers(users, followAction, previouslyFollowedList) })
+	await slowIterate(() => { 
+		iterateUsers(users, followAction, {
+			'previouslyFollowedList': previouslyFollowedList, 
+			'onlyFollowMediumMembers': onlyFollowMediumMembers
+		}) 
+	})
 }
 
 var followerCountButton = $(FOLLOWER_COUNT_SELECTOR)

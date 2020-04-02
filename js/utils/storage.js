@@ -6,6 +6,14 @@ const getLocalObj = (key) => {
 	})
 }
 
+const removeLocalObj = (key) => {
+	return new Promise(resolve => {
+		chrome.storage.local.remove([key], (result) => {
+			resolve([key])
+        });
+	})
+}
+
 const setLocalObj = (key, val) => {
 	return new Promise(resolve => {
 		chrome.storage.local.set({ [ key ]: val}, () => {

@@ -5,18 +5,40 @@ runFunctionInPageContext(function () {
 
 var numberOfScrolls = DEFAULT_SCROLL_NUMBER
 
-const unfollowAction = (user, whitelist) => {
+const MsToDays = (milliseconds) => {
+	return Math.floor(milliseconds / (1000 * 60 * 60 * 24))
+}
+
+const unfollowAction = async (user, config) => {
 	const userAlias = $(user).attr('href').split('/')[USER_NAME_HREF_INDEX]
+	const dataUserId = $(user).attr('data-user-id')
 	// first check the users configured whitelist to see if we should unfollow this user or not.
-	if (!whitelist.includes(userAlias)) {
-		const dataUserId = $(user).attr('data-user-id')
-		clickUnfollowButton(dataUserId)
+	if (!config.whitelist.includes(userAlias)) {
+		//if they're not in the whitelist, check the lookback setting
+		if (config.lookbackConfig.UNFOLLOW_LOOKBACK_ENABLED) {
+			//if we followed this user before enabling the lookback unfollow feature, 
+			//assume it happened far in the past so we default back to the original behavior of the bot.
+			const userFollowDateString =  await getLocalObj(userAlias) || '1972'
+			const userFollowDate = new Date(userFollowDateString)
+			//if there is a follow date in the future we've got real bad problems, so let's not do an abs value here.
+			//if it happens I'd prefer the bot break and not inadvertantly unfollow someone it shouldn't.
+			const followedDaysAgo = MsToDays(new Date() - userFollowDate)
+			if (followedDaysAgo >= config.lookbackConfig.UNFOLLOW_LOOKBACK_PERIOD) {
+				clickUnfollowButton(dataUserId, userAlias)
+			} else {
+				console.log(`not unfollowing ${userAlias} it hasn't been ${config.lookbackConfig.UNFOLLOW_LOOKBACK_PERIOD} days since following them.`)
+				showInlineMessage(user, `not unfollowing ${userAlias} it hasn't been more than ${config.lookbackConfig.UNFOLLOW_LOOKBACK_PERIOD} days since following them.`)
+			}
+		} else { //if lookback isn't enabled, simply unfollow the user.
+			clickUnfollowButton(dataUserId, userAlias)
+		}
 	} else {
-		console.log(`not unfollowing ${userAlias} as they're in the unfollow whitelist.`)
+		console.log(`not unfollowing ${userAlias} as they're on the unfollow whitelist.`)
+		showInlineMessage(user, `not unfollowing ${userAlias} as they're on the unfollow whitelist.`)
 	}
 }
 
-const clickUnfollowButton = (userDataId) => {
+const clickUnfollowButton = async (userDataId, userAlias) => {
 	const constructedSelector = FOLLOW_BUTTON_SELECTOR.format(userDataId)
 	const unfollowButton = $(constructedSelector)
 	if (unfollowButton.length == 0) {
@@ -25,6 +47,8 @@ const clickUnfollowButton = (userDataId) => {
 	}
 	console.log(`clicking unfollowing button ${userDataId}`)
 	unfollowButton.get(1).click()
+	console.log(`removing ${userAlias} from local storage`)
+	await removeLocalObj(userAlias) //conveniently, this doesn't break if the userAlias doesn't exist.
 }
 
 const unfollowAllButton = document.createElement("button"); 
@@ -32,6 +56,10 @@ unfollowAllButton.innerText="Unfollow All";
 unfollowAllButton.className = "button button--chromeless u-baseColor--buttonNormal"
 
 unfollowAllButton.onclick = async () => {
+	const lookbackConfig = { 
+		UNFOLLOW_LOOKBACK_PERIOD: await getLocalObj(UNFOLLOW_LOOKBACK_PERIOD) || 0, 
+		UNFOLLOW_LOOKBACK_ENABLED: await getLocalObj(UNFOLLOW_LOOKBACK_ENABLED) || false 
+	}
 	const unfollowFromBottomOfList = await getLocalObj(UNFOLLOW_FROM_BOTTOM) || false
 	const bottomTopSwitch = unfollowFromBottomOfList ? 'bottom' : 'top'
 	console.log(`unfollow button clicked, scrolling to bottom of the page...`)
@@ -47,7 +75,12 @@ unfollowAllButton.onclick = async () => {
 	clearButterBarMessages()
 	appendButterBarMessage(`Unfollowing ${users.length} users starting from the ${bottomTopSwitch} of the page.  Scroll to the ${bottomTopSwitch} of the page to view the progress of the unfollowing.`)
 	whitelist = await getLocalObj(UNFOLLOW_WHITELIST) || []
-    await slowIterate(() => { iterateUsers(users, unfollowAction, whitelist) })
+    await slowIterate(() => { 
+    	iterateUsers(users, unfollowAction, {
+    		'whitelist': whitelist,
+    		'lookbackConfig': lookbackConfig
+    	}) 
+    })
 }
 
 var followingCountButton = $(FOLLOWING_COUNT_SELECTOR)

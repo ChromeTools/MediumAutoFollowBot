@@ -3,6 +3,8 @@ const submitButton = document.getElementById('whitelistSubmit')
 const mediumMembersCheckBox = document.getElementById('mediumMembersOnly')
 const followFromBottomCheckBox = document.getElementById('followFromBottom')
 const unFollowFromBottomCheckBox = document.getElementById('unFollowFromBottom')
+const unFollowLookbackEnabledCheckBox = document.getElementById('unFollowLookbackEnabled')
+const unFollowLookbackPeriodInputBox = document.getElementById('unFollowLookbackPeriod')
 const facebookButton = document.getElementsByClassName('fa-facebook')[0]
 const twitterButton = document.getElementsByClassName('fa-twitter')[0]
 const emailButton = document.getElementsByClassName('fa-envelope')[0]
@@ -12,10 +14,14 @@ document.body.onload = async () => {
   mediumMembersOnly = await getLocalObj(MEDIUM_MEMBERS_ONLY) || false
   followFromBottom = await getLocalObj(FOLLOW_FROM_BOTTOM) || false
   unfollowFromBottom = await getLocalObj(UNFOLLOW_FROM_BOTTOM) || false
+  unFollowLookbackEnabled = await getLocalObj(UNFOLLOW_LOOKBACK_ENABLED) || false
+  unfollowLookbackPeriod = await getLocalObj(UNFOLLOW_LOOKBACK_PERIOD) || 1
   document.getElementById('whitelist').innerText = whitelist
   document.getElementById('mediumMembersOnly').checked = mediumMembersOnly
   document.getElementById('followFromBottom').checked = followFromBottom
   document.getElementById('unFollowFromBottom').checked = unfollowFromBottom
+  document.getElementById('unFollowLookbackEnabled').checked = unFollowLookbackEnabled
+  document.getElementById('unFollowLookbackPeriod').value = unfollowLookbackPeriod //if this is undefined it just shows as an empty string
 }
 
 submitButton.onclick = async () => {
@@ -27,17 +33,10 @@ submitButton.onclick = async () => {
   //check for usernames without '@' at the beginning.
   malformedUsernames = whitelist.filter(username => !username.startsWith('@'))
   if (malformedUsernames.length != 0) {
-    ga('popupTracker.send', 'exception', {
-      'exDescription': `Malformed usernames ${malformedUsernames}`,
-      'exFatal': false
-    });
-    message = document.getElementById('message')
-    message.style.color = "red"
-    message.innerText = "All usernames must begin with @."
+    showMessage("All usernames must begin with @.", true)
   } else {
     await setLocalObj(UNFOLLOW_WHITELIST, whitelist)
-    message = document.getElementById('message')
-    message.innerText = "whitelist successfully submitted and in use."
+    showMessage("whitelist successfully submitted and in use.", false)
   }
 }
 
@@ -78,3 +77,48 @@ unFollowFromBottomCheckBox.onclick = async () => {
   await setLocalObj(UNFOLLOW_FROM_BOTTOM, currentBoxValue)
   unFollowFromBottomCheckBox.checked = currentBoxValue ? true : false
 }
+
+
+unFollowLookbackEnabledCheckBox.onclick = async () => {
+  const currentBoxValue = unFollowLookbackEnabledCheckBox.checked
+  await setLocalObj(UNFOLLOW_LOOKBACK_ENABLED, currentBoxValue)
+  unFollowLookbackEnabledCheckBox.checked = currentBoxValue ? true : false
+}
+
+
+unFollowLookbackPeriodInputBox.addEventListener('input', async () => {
+  const unFollowLookbackPeriod = unFollowLookbackPeriodInputBox.value
+  if (validateDayValue(unFollowLookbackPeriod)) {
+    clearMessage()
+    await setLocalObj(UNFOLLOW_LOOKBACK_PERIOD, unFollowLookbackPeriod)
+  }
+})
+
+const validateDayValue = (unFollowLookbackPeriod) => {
+  if (unFollowLookbackPeriod > 365) {
+    showMessage('Please enter a day range less than 365 days.', true)
+    return false
+  }
+  if (isNaN(unFollowLookbackPeriod)) {
+    showMessage('Please enter a number for the day range.', true)
+    return false    
+  }
+  if (+unFollowLookbackPeriod <= 0) { //neat little js hack to convert a string to number lol...
+    showMessage('Please enter a positive day range.', true)
+    return false    
+  }
+  return true
+}
+
+const showMessage = (messageText, isWarning) => {
+    const message = document.getElementById('message')
+    message.innerText = messageText
+    message.style.color = isWarning ? 'red' : ''
+}
+
+const clearMessage = () => {
+    const message = document.getElementById('message')
+    message.innerText = ''
+    message.style.color = ''
+}
+
