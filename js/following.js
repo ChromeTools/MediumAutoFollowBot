@@ -64,12 +64,22 @@ unfollowAllButton.onclick = async () => {
 	const bottomTopSwitch = unfollowFromBottomOfList ? 'bottom' : 'top'
 	console.log(`unfollow button clicked, scrolling to bottom of the page...`)
 	appendButterBarMessage(`Scrolling to the bottom of the page with ${numberOfScrolls} scrolls to get the full list of users to unfollow...`)
+
+
+	//TODO: abstract this so it can be re-used between the two pages.
 	console.log(numberOfScrolls)
 	for (var i = 0; i < numberOfScrolls; i++) {
 		await sleep(SLEEP_TIME_IN_MS - 2000);
 		window.scrollTo(0, document.body.scrollHeight)
+		clearButterBarMessages()
+		appendButterBarMessage(`Scroll ${i + 1} of ${numberOfScrolls}...`)
 	}
-	console.log(`finished scrolling`)
+	clearButterBarMessages()
+	appendButterBarMessage(`Finished scrolling...`)
+	await sleep(SLEEP_TIME_IN_MS - 2000);
+
+
+
 	const users = unfollowFromBottomOfList ? $(USER_PROFILE_SELECTOR).get().reverse() : $(USER_PROFILE_SELECTOR)
 	console.log(`unfollowing ${users.length} users`)
 	clearButterBarMessages()

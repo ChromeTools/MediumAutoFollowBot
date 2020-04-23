@@ -14,9 +14,19 @@ runFunctionInPageContext(function () {
 });
 var numberOfScrolls = DEFAULT_SCROLL_NUMBER //if for some reason the number of scrolls isn't calculated properly.
 
-const followAction = async (user, config) => {
+const followAction = async (userDiv, config) => {
+	const user = $(userDiv).find(USER_PROFILE_SELECTOR)
+	const followButtonClass = $(userDiv).find(USER_FOLLOW_BUTTON_SELECTOR).attr('class')
 	const userAlias = $(user).attr('href').split('/')[USER_NAME_HREF_INDEX]
 	const dataUserId = $(user).attr('data-user-id')
+
+
+	// this was a bug where first time installers would unfollow their previous follows as the bot would click them even if the button
+	// already said "Following"
+	if (followButtonClass.includes('is-active')){
+		console.log('this user has been followed before the installation of the bot, we do not want to unfollow them.')
+		return
+	}
 
 	//for now we're going to hard code this "requirement" in, if there end up being more "requirements" one idea I had
 	//was to pass these requirements in as a list of functions to be iterated through.  If any of them fail then we skip
@@ -26,6 +36,7 @@ const followAction = async (user, config) => {
 		showInlineMessage(user, `Only following Medium members and ${userAlias} is not a Medium member.`)
 		return
 	}
+
 	// see if we've previously followed this user or not.
 	if (config.previouslyFollowedList.includes(userAlias)) {
 		console.log(`not following user ${userAlias} since we've previously followed them.`)
@@ -82,17 +93,26 @@ followAllButton.onclick = async () => {
 	const bottomTopSwitch = followFromBottomOfList ? 'bottom' : 'top'
 	appendButterBarMessage(`Scrolling to the bottom of the page with ${numberOfScrolls} scrolls to get the full list of users to follow...`)
 	console.log(`follow all button clicked, scrolling to bottom of the page with ${numberOfScrolls} scrolls...`)
+
+
+	//TODO: abstract this so it can be re-used between the two pages.
+	console.log(numberOfScrolls)
 	for (var i = 0; i < numberOfScrolls; i++) {
 		await sleep(SLEEP_TIME_IN_MS - 2000);
 		window.scrollTo(0, document.body.scrollHeight)
+		clearButterBarMessages()
+		appendButterBarMessage(`Scroll ${i + 1} of ${numberOfScrolls}...`)
 	}
+	clearButterBarMessages()
+	appendButterBarMessage(`Finished scrolling...`)
 	await sleep(SLEEP_TIME_IN_MS - 2000);
-	console.log(`finished scrolling`)
-	const users = followFromBottomOfList ? $(USER_PROFILE_SELECTOR).get().reverse() : $(USER_PROFILE_SELECTOR)
+
+
+	const users = followFromBottomOfList ? $(USERS_PROFILE_SELECTOR).get().reverse() : $(USERS_PROFILE_SELECTOR)
 	console.log(`following ${users.length} users`)
 	clearButterBarMessages()
 	appendButterBarMessage(`Following ${users.length} users starting from the ${bottomTopSwitch} of the page.  Scroll to the ${bottomTopSwitch} of the page to view the progress of the following.`)
-	// get sync storage for all user's we've previously followed.
+	// // get sync storage for all user's we've previously followed.
 	var previouslyFollowedList = await getLocalObj(PREVIOUSLY_FOLLOWED_LIST) || []
 	console.log(`previously followed ${previouslyFollowedList.length} users`)
 	await slowIterate(() => { 
