@@ -18,6 +18,7 @@
         "js/utils/prototypeOverrides.js",
         "js/utils/slowIterate.js",
         "js/utils/storage.js",
+        "js/utils/actions.js",
         "js/following.js"
       ]
 		},   	
@@ -31,6 +32,7 @@
         "js/utils/prototypeOverrides.js",
         "js/utils/slowIterate.js",
         "js/utils/storage.js",
+        "js/utils/actions.js",
         "js/followers.js"
       ]
 		}

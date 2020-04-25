@@ -13,3 +13,18 @@ const iterateUsers = async (users, func, config) => {
 		func(user, config)
 	}
 }
+
+
+const scroll = async (numberOfScrolls, sleepTime) => {
+	appendButterBarMessage(`Scrolling to the bottom of the page with ${numberOfScrolls} scrolls to get the full list of users...`)
+
+	for (var i = 0; i < numberOfScrolls; i++) {
+		await sleep(sleepTime);
+		window.scrollTo(0, document.body.scrollHeight)
+		clearButterBarMessages()
+		appendButterBarMessage(`Scroll ${i + 1} of ${numberOfScrolls}...`)
+	}
+	clearButterBarMessages()
+	appendButterBarMessage(`Finished scrolling...`)
+	await sleep(sleepTime);
+}
